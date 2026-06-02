@@ -1,0 +1,8 @@
+from fastapi import FastAPI
+from app.config import settings
+
+app = FastAPI(title="api-shield")
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
