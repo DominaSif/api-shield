@@ -10,7 +10,7 @@ async def lifespan(app: FastAPI):
     yield
     await app.state.pool.close()
 
-app = FastAPI(title="api-shield", lifespan=lifespan)
+app = FastAPI(title="data-gate", lifespan=lifespan)
 app.include_router(documents.router)
 
 @app.get("/health")
