@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: datagate
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: changeme
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d datagate"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://app_user:changeme@db/datagate
+      SECRET_KEY: supersecretkey123
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
